@@ -15,7 +15,7 @@ This is an educational clean-room reimplementation for the YZM301 teardown sprin
 - Initial REA findings and Evidence IDs are recorded in `LEDGER.md`. Raw JSON stays in ignored `work/rea/`; no decompiler output is checked in. The manual screenshots remain supplementary, not REA-tagged evidence.
 - `SPEC.md` is the inspection draft for the required CLI modes. It clearly marks the formulas and minimum-N search behavior that still need direct K4-path corroboration.
 - A further REA analysis of `FUN_0043f050` found G*Power's CDF inverse uses a derivative-assisted bounded step with midpoint fallback and thresholds near `1e-10`; see the Evidence ID and limits in `LEDGER.md`.
-- A separate clean-room session implemented the required Python CLI and reusable calculation engine from `SPEC.md` only. No tests have been run; see `src/` and `pyproject.toml` for the implementation and launch options.
+- A separate clean-room session implemented the required Python CLI and reusable calculation engine from `SPEC.md` only. The required public a-priori and post-hoc vectors were run and match the expected values to seven decimal places. No separate automated test suite has been added; see `src/` and `pyproject.toml` for the implementation and launch options.
 
 ## Scope
 
