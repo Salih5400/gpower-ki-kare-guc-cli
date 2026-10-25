@@ -1,0 +1,19 @@
+# Local software and analysis artifacts. Never commit G*Power or decompiler output.
+GPowerNT.exe
+GPower.exe
+VC_redist.x86.exe
+*.i64
+*.idb
+*.pdb
+*.dll
+*.exe
+*.zip
+*.7z
+*.tar.gz
+# Local installs, scratch work, generated output
+work/
+outputs/
+__pycache__/
+*.py[cod]
+.venv/
+venv/
