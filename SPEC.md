@@ -22,7 +22,7 @@ Status: inspection draft for clean-room implementation. Required modes are `a-pr
 
 - Inputs `w`, `alpha`, `power`, and `df` have the contract ranges: `w > 0`, `0 < alpha < 1`, `0 < power < 1`, integer `df >= 1`. For post-hoc, `n_total` is an integer `>= 2`. Reject NaN and infinities. `[DOK]`
 - The contingency-table power analysis uses a central chi-square critical value at cumulative probability `1 - alpha`. `[REA]` `FUN_004e5310` calls the chi-square quantile path with `1 - param_4`; `FUN_0043f050` numerically solves the CDF for its target probability. The mapping of `param_4` to the UI's alpha is supported by the observed critical value `11.0704977` for `alpha=.05, df=5`. `[AJAN]`
-- The alternative distribution is noncentral chi-square with noncentrality `lambda = N * w^2`; power is its upper-tail probability above the critical value. `[AJAN]` This is consistent with the displayed values (`N=220, w=.3 -> lambda=19.8`; `N=100, w=.3 -> lambda=9`) and with the REA-observed CDF/quantile paths and complementary-tail calculation. The exact K4 class-to-parameter data flow remains an open static-analysis question; see `LEDGER.md`.
+- The alternative distribution is noncentral chi-square with noncentrality `lambda = N * w^2`; power is its upper-tail probability above the critical value. `[REA]` The class-specific path is traced in `LEDGER.md`; GUI selector ownership and the optional rounding flag remain open.
 - Calculate `critical_chi2` once from `df` and `alpha`, then use the same value for either mode. `[REA]/[AJAN]`
 
 ## Acceptance criteria
