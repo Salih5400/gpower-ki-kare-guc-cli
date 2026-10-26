@@ -29,7 +29,7 @@ Status: inspection draft for clean-room implementation. Required modes are `a-pr
 
 ### A-priori
 
-- Given `w`, `alpha`, `power`, and `df`, compute the smallest integer total sample size `N >= 2` whose achieved upper-tail power is at least the requested power. Return `ncp = N*w^2`, `critical_chi2`, integer `n_total`, and achieved power as `actual_power`. `[DOK]` output names; minimal-integer search is a provisional interpretation `[AJAN]` and must remain easy to revise if further REA evidence contradicts it.
+- Given `w`, `alpha`, `power`, and `df`, compute the smallest integer total sample size `N >= 2` whose achieved upper-tail power is at least the requested power. Return `ncp = N*w^2`, `critical_chi2`, integer `n_total`, and achieved power as `actual_power`. `[DOK]` output names; the REA-observed G*Power path solves `Power(w, alpha, N) - target_power = 0` for continuous N, then conditionally stabilizes to 10 decimal places and applies `ceil`. The GUI path's flag controlling this postprocessing is not yet resolved. For the clean-room engine, monotone integer search is equivalent on the supported domain and was used to return the smallest passing integer. `[REA]/[AJAN]`
 - For `w=.3`, `alpha=.05`, `power=.95`, and `df=5`, return `ncp=19.8`, `critical_chi2` rounding to `11.0704977`, `n_total=220`, and `actual_power` rounding to `.9502155`. `[DOK]` public vector, corroborated by the user-supplied G*Power screenshot `[AJAN]`.
 
 ### Post-hoc
@@ -47,14 +47,15 @@ Status: inspection draft for clean-room implementation. Required modes are `a-pr
 ## Numerical implementation notes
 
 - Implement the calculation in one reusable engine; CLI parsing/JSON output are a thin adapter. `[DOK]`
-- The binary has an observed CDF helper with Poisson-distribution and chi-square-distribution objects, a CDF quantile wrapper, and a derivative-assisted safeguarded root solver. `[REA]` See `LEDGER.md` for evidence IDs and limitations. The solver accepts target probability in `[0,1]`, returns 0 at 0 and `+infinity` at 1, and uses relative/probability stopping thresholds around `1e-10`. These details concern G*Power's internal distribution solver; they do not, by themselves, establish the K4 sample-size search algorithm. `[REA]`
+- The `PowerChiCont` class is registered in the power-class registry. Its calculation path uses `lambda = N*w^2`, `critical_chi2 = chi2_quantile(1-alpha, df)`, and `power = 1 - noncentral_chi2_cdf(critical_chi2, df, lambda)`. `[REA]` See `LEDGER.md` for evidence IDs and limitations.
+- G*Power's K4 a-priori path selects the sample-size callback `Power(w_fixed, alpha_fixed, N) - target_power`; its shared bracketed root solver uses tolerance `1e-10` and a 300-iteration cap on that path. A separate mode solves for `w` with N fixed and a 100-iteration cap. `[REA]`
+- When the a-priori solver's round-up flag is nonzero, it transforms the root as `ceil(floor(root*1e10 + 0.5)/1e10)`. The flag value passed by the visible GUI path is unresolved. `[REA]`
 - Public-vector comparisons should use the contract's seven-decimal expected values as the initial compatibility target; emitted JSON still uses full double precision. Exact hidden-vector threshold is determined by the sprint grader. `[DOK]`
 
 ## Unresolved behavior
 
-- Exact K4 call path from `CEff_CHI_GoF_Cont` / `PowerChiCont` to the distribution and sample-size calculations.
-- How the a-priori mode searches `N`, including initialization, bounds, monotonicity assumptions, and exact minimality/termination.
-- Exact parameter mapping into noncentrality and CDF calls, beyond consistency with `lambda=N*w^2` and the displayed public values.
+- Which GUI/UI call path reaches the registered `PowerChiCont` class and what value it supplies for the optional round-up flag.
+- Exact solver bracket initialization and lower-bound semantics for the visible GUI a-priori path, beyond the observed 300-iteration cap and root callback.
 - Error code/message mapping for every invalid boundary and overflow case.
 - Whether the seven-decimal G*Power display is rounded or truncated. CLI contract requires full precision, so display formatting is not copied.
 
