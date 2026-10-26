@@ -28,3 +28,11 @@
 - Screenshot: [`k4-posthoc-fractional-df-1.5.png`](k4-posthoc-fractional-df-1.5.png).
 - Evidence status: manual GUI observation supplied by the user; this is a candidate undocumented behavior, not REA-tagged evidence.
 - Scope note: the sprint CLI contract specifies integer `df`; this probe records observed G*Power UI behavior and does not override the required CLI validation contract.
+
+## A-priori sample-size boundary probe
+
+- Probe: kept the chi-square contingency-table post-hoc inputs at `w=0.3`, `alpha=0.05`, `df=5`, changed `n_total` to 219, and recalculated in G*Power 3.1.9.7.
+- Observed output: `lambda = 19.7100000`, `critical chi-square = 11.0704977`, and power `0.9492324`.
+- Comparison: the a-priori run at `N=220` reports power `0.9502155` for a target of 0.95. Thus N=219 is below the target and N=220 is at or above it for this vector.
+- Independent CLI calculation: N=219 power `0.9492324309108173`; N=220 power `0.9502155018970154`; a-priori returns `N=220` and the same actual power.
+- Evidence status: G*Power run is a GUI observation, not REA-tagged evidence. The CLI values are direct outputs of the clean-room engine. This single boundary probe supports minimality for this public vector only; it does not prove the hidden-vector threshold.

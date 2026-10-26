@@ -8,8 +8,13 @@ version = "0.1.0"
 description = "Chi-square contingency power calculations"
 requires-python = ">=3.10"
 
+[project.optional-dependencies]
+agent = ["openai>=2,<3"]
+
 [project.scripts]
 gpower-clone = "gpower_clone.cli:main"
+gpower-mcp = "gpower_clone.mcp_server:main"
+gpower-agent = "gpower_clone.agent:main"
 
 [tool.setuptools]
 package-dir = {"" = "src"}
